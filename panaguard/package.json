@@ -1,0 +1,16 @@
+{
+  "name": "panaguard",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start"
+  },
+  "dependencies": {
+    "react": "15.2.1",
+    "react-native": "0.30.0",
+    "react-native-keyboard-aware-scroll-view": "^0.1.2",
+    "react-native-keychain": "^0.3.2",
+    "react-native-statusbar-alert": "0.0.2",
+    "socket.io-client": "^1.4.8"
+  }
+}

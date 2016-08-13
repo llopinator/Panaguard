@@ -1,0 +1,38 @@
+{
+  "scripts": {
+    "start": "concurrently -k \"nodemon ./app.js\" \"npm run watch\"",
+    "watch": "watchify client/index.js -o public/bundle.js -t [ babelify --presets [ es2015 react ] ]",
+    "postinstall": "browserify client/index.js -o public/bundle.js -t [ babelify --presets [ es2015 react ] ]"
+  },
+  "dependencies": {
+    "babel-eslint": "^6.1.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "babelify": "^7.3.0",
+    "bcrypt": "^0.8.7",
+    "body-parser": "~1.13.2",
+    "browserify": "^13.0.1",
+    "connect-mongo": "^1.3.2",
+    "cookie-parser": "^1.4.3",
+    "express": "~4.13.1",
+    "express-session": "^1.14.0",
+    "hbs": "^4.0.0",
+    "jsonwebtoken": "^7.1.8",
+    "mongoose": "^4.5.8",
+    "morgan": "~1.6.1",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1",
+    "serve-favicon": "^2.3.0",
+    "socket.io": "^1.4.8",
+    "underscore": "^1.8.3",
+    "websocket": "^1.0.23",
+    "ws": "^1.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^2.2.0",
+    "eslint": "^3.0.1",
+    "eslint-plugin-react": "^5.2.2",
+    "nodemon": "^1.9.2",
+    "watchify": "^3.7.0"
+  }
+}
