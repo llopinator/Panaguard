@@ -67,8 +67,6 @@ app.use(function(req, res, next) {
 //          Websockets
 //==============================
 
-//right(start)
-
 var url = require('url')
   , WebSocketServer = WebSocket.Server
   , wss = new WebSocketServer({ port: 8080 })
@@ -76,7 +74,9 @@ var url = require('url')
 // app.use(function (req, res) {
 //   res.send({ msg: "hello" });
 // });
- 
+
+wss.dispatchers = []; //queue of dispatchers awaiting emergency requests
+
 wss.on('connection', function connection(ws) {
   console.log('User connected!');
   console.log('total users: ', wss.clients.length);
@@ -88,20 +88,43 @@ wss.on('connection', function connection(ws) {
  
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
-    
-  });
+    var msg = JSON.parse(message);
 
-  // ws.on('room', function )
+    if(msg.type === "auth") {
 
-  
- 
-});
- 
-// server.on('request', app);
-// server.listen(port, function () { console.log('Listening on ' + server.address().port) });
+      if(msg.op){ //if dispatcher requesting auth, verify w/ dispatcher secret
+        jwt.verify(msg.token, process.env.SECRET, function(err, decoded) {      
+          if (err) {
+            return ws.close(401, 'error: ' + err)    
+          } else {
+            // if good, set connection to dispatcher and ack
+            ws.dispatcher = true;
+            wss.dispatchers.push(ws); //add dispatcher to queue
+            ws.send(JSON.stringify({
+              type: 'ack'
+            }));
+          }
+        });
+      } else { //not dispatcher (presumably user)
+        jwt.verify(msg.token, process.env.USER_SECRET, function(err, decoded) {      
+          if (err) {
+            return ws.close(401, 'error: ' + err)    
+          } else {
+            //if good, ack and nextDispatcher
+            //nextDispatcher
+            ws.send(JSON.stringify({
+              type: 'ack'
+            }));
+          }
+        });
+      }
+    }
+  }); //end of ws
+}); //end of wss
 
-
-//right(end)
+wss.nextDispatcher = () => {
+ //assigns next dispatcher to next user
+}
 
 //==============================
 //    (end) Websockets
@@ -109,13 +132,14 @@ wss.on('connection', function connection(ws) {
 
 //use routes
 
-app.get('/', function(req, res) {
-  res.render('index');
-});
-
 //app.use('/dispatch', dispatch);
 app.use('/auth', auth);
 app.use('/api', routes);
+
+app.get('/*', function(req, res) {
+  res.render('index');
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
