@@ -5,6 +5,13 @@ var express = require('express'),
     bcrypt  = require('bcrypt'),
     router  = express.Router();
 
+router.post('/newuser', function(req, res, next){
+  var uuid = req.body.uuid;
+  res.json({
+    token: jwt.sign({device: uuid}, process.env.USER_SECRET)
+  })
+});
+
 router.post('/register', function(req, res, next) {
 
   if(!req.body.username || ! req.body.password){

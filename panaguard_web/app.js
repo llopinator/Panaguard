@@ -14,14 +14,8 @@ var express       = require('express'),
     mongoose      = require('mongoose'),
     jwt           = require('jsonwebtoken'),
     bcrypt        = require('bcrypt'),
-    server        = require('http').Server(app);
-    // io            = require('socket.io')(server);
-    var WebSocketServer = require('websocket').server;
-    var WebSocketClient = require('websocket').client;
-    var WebSocketFrame  = require('websocket').frame;
-    var WebSocketRouter = require('websocket').router;
-    var W3CWebSocket = require('websocket').w3cwebsocket;
-
+    server        = require('http').Server(app),
+    WebSocket = require('ws');
 //==============================
 //           Routes
 //==============================
@@ -60,65 +54,54 @@ var connect = process.env.MONGODB_URI;
 mongoose.connect(connect);
 
 //==============================
+//            CORS
+//==============================
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+//==============================
 //          Websockets
 //==============================
 
-var wsServer = new WebSocketServer({
-    httpServer: server,
-    // You should not use autoAcceptConnections for production
-    // applications, as it defeats all standard cross-origin protection
-    // facilities built into the protocol and the browser.  You should
-    // *always* verify the connection's origin and decide whether or not
-    // to accept it.
-    autoAcceptConnections: false
-});
+//right(start)
 
-function originIsAllowed(origin) {
-  // put logic here to detect whether the specified origin is allowed.
-  return true;
-}
-
-wsServer.on('request', function(request) {
-    console.log("[got connection]");
-    if (!originIsAllowed(request.origin)) {
-      // Make sure we only accept requests from an allowed origin
-      request.reject();
-      console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
-      return;
-    }
-
-    // var connection = request.accept('echo-protocol', request.origin);
-    var connection = request.accept(null, request.origin);
-    console.log((new Date()) + ' Connection accepted.');
-
-    connection.on('message', function(message) {
-        if (message.type === 'utf8') {
-            console.log('Received Message: ' + message.utf8Data);
-            connection.sendUTF('yes I can');
-            // connection.sendUTF(message.utf8Data);
-        }
-        else if (message.type === 'binary') {
-            console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-            connection.sendBytes(message.binaryData);
-        }
-    });
-
-    connection.on('close', function(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-    });
-});
-
-// io.on('connection', function (socket) {
-//   console.log('connected');
-//   // socket.on('username', function(username) {
-//   //   if (!username || !username.trim()) {
-//   //     return socket.emit('errorMessage', 'No username!');
-//   //   }
-//   //   socket.username = String(username);
-//   // });
-
-//   socket.emit('connect2', "");
+var url = require('url')
+  , WebSocketServer = WebSocket.Server
+  , wss = new WebSocketServer({ port: 8080 })
+ 
+// app.use(function (req, res) {
+//   res.send({ msg: "hello" });
 // });
+ 
+wss.on('connection', function connection(ws) {
+  console.log('User connected!');
+  console.log('total users: ', wss.clients.length);
+  //console.log('connection established. clients: ', wss.clients[0].blah);
+  var location = url.parse(ws.upgradeReq.url, true);
+  //console.log('location: ',location)
+  // you might use location.query.access_token to authenticate or share sessions 
+  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312) 
+ 
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+    
+  });
+
+  // ws.on('room', function )
+
+  
+ 
+});
+ 
+// server.on('request', app);
+// server.listen(port, function () { console.log('Listening on ' + server.address().port) });
+
+
+//right(end)
 
 //==============================
 //    (end) Websockets

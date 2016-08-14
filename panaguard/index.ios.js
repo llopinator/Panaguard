@@ -32,6 +32,7 @@ var Register = require('./components/register');
 var Medical = require('./components/medical');
 var Contacts = require('./components/contacts');
 var Emergency = require('./components/emergency');
+var DeviceUUID = require('react-native-device-uuid');
 
 // 1
 // This is the root view
@@ -67,6 +68,40 @@ var Landing = React.createClass({
     return {
       loggedIn: token && password
     }
+  },
+  componentDidMount(){
+    AsyncStorage.getItem('user')
+    .then(result => {
+      console.log('result: ', result);
+      if(!result){
+        console.log('true');
+        return DeviceUUID.getUUID()
+        .then(uuid => {
+          console.log('uuid: ', uuid);
+          return fetch('http://localhost:3000/auth/newuser', {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              uuid: uuid,
+            })
+          })
+        })
+        .then(response => response.json())
+        .then(responseJSON => {
+          console.log('resJSON: ', responseJSON);
+          return AsyncStorage.setItem('user', responseJSON.token);
+        })
+      }
+    })
+    .catch((err) => {
+      if(err){
+        Alert.alert(
+          err.message
+        );
+      }
+    });
   },
   press() {
     this.props.navigator.push({

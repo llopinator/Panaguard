@@ -8,6 +8,7 @@
   "dependencies": {
     "react": "15.2.1",
     "react-native": "0.30.0",
+    "react-native-device-uuid": "^1.2.0",
     "react-native-keyboard-aware-scroll-view": "^0.1.2",
     "react-native-keychain": "^0.3.2",
     "react-native-statusbar-alert": "0.0.2",

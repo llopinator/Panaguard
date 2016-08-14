@@ -27,7 +27,6 @@ var styles = require('../styles/style');
 
 // var io = require("../node_modules/socket.io-client/socket.io");
 
-const DEFAULT_WS_URL = 'ws://localhost:3000/';
 const WS_EVENTS = [
   'close',
   'error',
@@ -44,14 +43,7 @@ const WS_STATES = [
 module.exports = React.createClass({
   getInitialState(){
     console.log("Creating socket");
-    var socket = new WebSocket('ws://localhost:3000/');
-    // socket.addEventListener('connect', () => {
-    //   console.log('CONNECTED!!!!!!fDSAF>DJLSFASDLJDSAJFKDSJAKLFDSA');
-    // })
-    // socket.addEventListener('connect2', () => {
-    //   console.log('test');
-    // })
-
+    var socket = new WebSocket('ws://localhost:8080/');
 
     return {
       socket: socket
@@ -59,13 +51,9 @@ module.exports = React.createClass({
   },
   componentDidMount(){
     console.log("Adding socket event listener to:", this.state.socket);
-    // this.state.socket.addEventListener('connect', () => {
-    //   socket.send('message');
-    //   console.log('CONNECTED!!!!!!fDSAF>DJLSFASDLJDSAJFKDSJAKLFDSA');
-    // })
-    // this.state.socket.addEventListener('connect2', () => {
-    //   console.log('CONNECT22222222222222');
-    // })
+  },
+  emergency(){
+    this.state.socket.send('working');
   },
   cancel(){
     this.props.navigator.pop();
@@ -75,6 +63,9 @@ module.exports = React.createClass({
       <View style={styles.container}>
         <View>
           <Text>Help is on the Way!</Text>
+          <TouchableOpacity onPress={this.emergency} style={[styles.button, styles.buttonGreen]}>
+            <Text style={styles.buttonLabel}>Message</Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={this.cancel} style={[styles.button, styles.buttonRed]}>
             <Text style={styles.buttonLabel}>Cancel request</Text>
           </TouchableOpacity>
