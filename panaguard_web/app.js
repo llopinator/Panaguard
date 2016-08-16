@@ -29,6 +29,7 @@ var dispatch  = require('./routes/dispatch');
 //==============================
 
 var User = require('./models/user');
+var Emergency = require('./models/emergency');
 
 //==============================
 //      View Engine Setup
@@ -70,35 +71,30 @@ app.use(function(req, res, next) {
 var url = require('url')
   , WebSocketServer = WebSocket.Server
   , wss = new WebSocketServer({ port: 8080 })
- 
-// app.use(function (req, res) {
-//   res.send({ msg: "hello" });
-// });
 
 wss.dispatchers = []; //queue of dispatchers awaiting emergency requests
 
 wss.on('connection', function connection(ws) {
-  console.log('User connected!');
-  console.log('total users: ', wss.clients.length);
-  //console.log('connection established. clients: ', wss.clients[0].blah);
+  
   var location = url.parse(ws.upgradeReq.url, true);
-  //console.log('location: ',location)
-  // you might use location.query.access_token to authenticate or share sessions 
-  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312) 
+  
  
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
     var msg = JSON.parse(message);
 
-    if(msg.type === "auth") {
+    if(msg.type === "auth") { //user or dispatcher auth
 
       if(msg.op){ //if dispatcher requesting auth, verify w/ dispatcher secret
         jwt.verify(msg.token, process.env.SECRET, function(err, decoded) {      
           if (err) {
             return ws.close(401, 'error: ' + err)    
           } else {
+            console.log('dispatcher authorized');
             // if good, set connection to dispatcher and ack
+            ws.authorizedUser = true;
             ws.dispatcher = true;
+            ws.dispatcherToken = decoded; //store dispatcher's JWT on the ws connection for identification
             wss.dispatchers.push(ws); //add dispatcher to queue
             ws.send(JSON.stringify({
               type: 'ack'
@@ -106,12 +102,24 @@ wss.on('connection', function connection(ws) {
           }
         });
       } else { //not dispatcher (presumably user)
-        jwt.verify(msg.token, process.env.USER_SECRET, function(err, decoded) {      
+        jwt.verify(msg.token, process.env.USER_SECRET, function(err, decoded) { 
+          console.log('verifying user connection');     
           if (err) {
             return ws.close(401, 'error: ' + err)    
+          } else if(wss.dispatchers.length === 0) {
+            //CHECK IF DISPATCHERS ARRAY EMPTY
+            //if dispatchers.length === 0, emit event says "try again" (tell them to send another ack)
+            console.log('no dispatches in queue - telling user to try again');
+            ws.send(JSON.stringify({
+              type: 'tryAgain',
+              token: msg.token
+            }));
           } else {
-            //if good, ack and nextDispatcher
-            //nextDispatcher
+            //what if only one dispatcher on queue and assigned before user gets here?
+            console.log('user connection authorized');
+            ws.authorizedUser = true;
+            ws.uuid = decoded; //store user's uuid on the ws connection for identification
+            wss.nextDispatcher(ws);
             ws.send(JSON.stringify({
               type: 'ack'
             }));
@@ -119,11 +127,40 @@ wss.on('connection', function connection(ws) {
         });
       }
     }
+
+    if(msg.type === "emergency" && ws.authorizedUser && ws.currDispatcher){ //user's emergency request
+      console.log('dispatcher received medical information!')
+      console.log(ws.uuid);
+      var emergency = new Emergency({ //asynchronously store emergency in DB
+        dispatcher: ws.currDispatcher.dispatcherToken._id,
+        user: ws.uuid.device,
+        medinfo: msg.medinfo,
+        latitude: "", //TEMP
+        longitude: "", //TEMP
+        emergencyType: "" //TEMP
+      }).save(function(error, med){
+          if(error){
+            console.log('error saving emergency to db: ', error)
+          } else {
+            console.log('successfully saved emergency to db');
+          }
+      });
+      ws.currDispatcher.userMedInfo = msg.medinfo; //store medinfo on dispatcher ws connection
+      ws.send(JSON.stringify({
+          type: 'paired'
+        }));
+    }
+
   }); //end of ws
 }); //end of wss
 
-wss.nextDispatcher = () => {
- //assigns next dispatcher to next user
+
+//assigns next dispatcher to next user
+wss.nextDispatcher = (ws) => {
+  //else, assign dispatcher:
+  var dispatcher = wss.dispatchers.shift(); //take next dispatcher off queue
+  dispatcher.currUser = ws; //assign dispatcher to user
+  ws.currDispatcher = dispatcher; //assign user to dispatcher
 }
 
 //==============================

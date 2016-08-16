@@ -187,7 +187,7 @@ module.exports = React.createClass({
             onChangeText={this.updateCond.bind(this, index, 'notes')}
           />
           <TouchableOpacity onPress={this.deleteCondition.bind(this, index)} style={[styles.button, styles.buttonRed]}>
-            <Text style={styles.buttonLabel}>Delete Contact</Text>
+            <Text style={styles.buttonLabel}>Delete Medical Condition</Text>
           </TouchableOpacity>
         </View>
       )

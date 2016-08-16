@@ -74,7 +74,7 @@ var App = React.createClass({
 	render() { //chatroom component
 	return (
 		<div style={{display: 'block'}}>
-			<h1 style={{textAlign:'center'}}>Welcome, Dispatcher! Please log in</h1>
+			<h1 style={{textAlign:'center'}}>Panaguard</h1>
 			<div style={{textAlign:'center'}}>
 				<input type='text' onChange={e => this.setState({username: e.target.value})} placeholder='Username'>
 				</input>
@@ -137,23 +137,51 @@ var emergencyNavigator = React.createClass({
 		var ws = new WebSocket('ws://localhost:8080/');
 		return {
 			socket: ws,
+			connected: false
 		}   
 	},
 	componentDidMount() {
 		this.state.socket.onopen = function(){
-			console.log('connection has been opened');
-		}
+			//console.log('connection has been opened');
+			this.state.socket.send(JSON.stringify({
+				type: 'auth',
+				token: localStorage.getItem('dispatchToken'),
+				op: true
+			}));
+		}.bind(this);
+
+		this.state.socket.onmessage = (event) => {
+			var msg = JSON.parse(event.data);
+
+			if(msg.type === 'ack'){
+				console.log('Dispatcher has been connected - awaiting emergencies');
+				this.setState({
+					connected: true
+				})
+			}
+		};
 	},
 	dashboard(){
 		browserHistory.goBack();
 	},
 	render(){
 		return (
-			<div style={{textAlign: 'center'}}>
-				Awaiting emergencies...
-				<button onClick={this.dashboard}>
-					End shift
-				</button>
+			<div>
+				{this.state.connected ?
+					<div style={{textAlign: 'center'}}>
+						Awaiting emergencies - be ready.
+						<button onClick={this.dashboard}>
+							End shift
+						</button>
+					</div>
+					:
+					<div style={{textAlign: 'center'}}>
+						Connecting to the emergency channel...
+						<button onClick={this.dashboard}>
+							End shift
+						</button>
+					</div>
+				}
 			</div>
 		)
 	}
