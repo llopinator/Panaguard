@@ -229,6 +229,14 @@ wss.on('connection', function connection(ws) {
       }));
     }
 
+    if(msg.type === 'identifyEmergency' && ws.authorizedUser && ws.currDispatcher){
+      //update type of emergency
+      ws.currDispatcher.send(JSON.stringify({
+        type: 'identifyEmergency',
+        emergency: msg.emergency
+      }));
+    }
+
   }); //end of ws
 }); //end of wss
 

@@ -67,7 +67,7 @@ module.exports = React.createClass({
       weight: 0,
       height: 0,
       notes: "",
-      // allergies: "",
+      phone: "",
       conditions: [],
       condName: "",
       condSymptoms: "",
@@ -133,21 +133,6 @@ module.exports = React.createClass({
       saved: false
     })
   },
- //fsdfdsafdsa
-  // onFocus(ref) {
-  //   const handle = ReactNative.findNodeHandle(this.refs[ref]);
-  //   UIManager.measureLayoutRelativeToParent(
-  //     handle, 
-  //     (e) => {console.error(e)}, 
-  //     (x, y, w, h) => {
-  //       console.log('offset', x, y, w, h);
-  //       this.refs.scrollView
-  //       .scrollTo({
-  //         y: y - 100,
-  //         animated: true
-  //       })
-  //     });
-  // },
 
   render() {
 
@@ -214,6 +199,17 @@ module.exports = React.createClass({
             defaultValue={this.state.lastName}
             // onFocus={() => this.onFocus('lastName')}
           />
+          <Text style={styles.label}>Phone number</Text>
+          <TextInput
+            style={{height: 40, textAlign: 'center'}}
+            placeholder="Phone number"
+            keyboardType="numeric"
+            returnKeyType={'done'}
+            onChangeText={(phone) => this.setState({phone: phone.toString(), saved: false})}
+            ref='phone'
+            defaultValue={this.state.phone}
+            // onFocus={() => this.onFocus('weight')}
+          />
           <Text style={styles.label}>Date of Birth</Text>
           <Modal
             animationType={this.state.animationType}
@@ -260,7 +256,7 @@ module.exports = React.createClass({
             defaultValue={(this.state.height).toString()}
             // onFocus={() => this.onFocus('height')}
           />
-          <Text style={styles.label}>Notes for the Dispatcher</Text>
+          <Text style={styles.label}>Allergies, medications, notes</Text>
           <TextInput
             style={{height: 60, textAlign: 'center'}}
             placeholder="Notes"

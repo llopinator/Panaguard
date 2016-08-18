@@ -49,7 +49,9 @@ module.exports = React.createClass({
       socket: socket,
       paired: false,
       position: "unknown",
-      maximumAge: 30000
+      maximumAge: 30000,
+      emergencies: [],
+      typeSent: false
     }
   },
   componentDidMount(){
@@ -110,6 +112,12 @@ module.exports = React.createClass({
                     medinfo: result,
                     position: pos
                   }));
+          
+                  var obj = JSON.parse(result);
+
+                  this.setState({
+                    emergencies: obj.conditions
+                  })
                 }
               
             });
@@ -145,8 +153,18 @@ module.exports = React.createClass({
 
     });
   },
-  componentWillUnmount: function() {
+  componentWillUnmount(){
     navigator.geolocation.clearWatch(this.watchID);
+  },
+  identifyEmergency(event, emergency){
+    this.state.socket.send(JSON.stringify({
+      type: 'identifyEmergency',
+      emergency: emergency
+
+    }));
+    this.setState({
+      typeSent: true
+    })
   },
   stopTrying(){
     this.state.socket.close();
@@ -167,14 +185,41 @@ module.exports = React.createClass({
     }
   },
   render(){
+    console.log(this.state.emergencies);
+    var emergencies = this.state.emergencies.map(function(emergency, index){
+      return (
+
+        <TouchableOpacity onPress={(event) => this.identifyEmergency(event, emergency.name)} key={index} style={[styles.button, styles.buttonGreen]}>
+          <Text style={styles.buttonLabel}>{emergency.name}</Text>
+        </TouchableOpacity>
+
+      )
+    }.bind(this));
+
     return(
       <View style={styles.container}>
         {this.state.paired ?
           <View>
-            <Text>Connected with a dispatcher! Help is on the way.</Text>
-            <TouchableOpacity onPress={this.cancel} style={[styles.button, styles.buttonRed]}>
-              <Text style={styles.buttonLabel}>Cancel request</Text>
-            </TouchableOpacity>
+            <Text>Connected with a dispatcher!</Text>
+          {this.state.typeSent ?
+            <View>
+              <Text>Dispatcher knows your emergency.</Text>
+              <TouchableOpacity onPress={() => this.setState({typeSent: false})} style={[styles.button, styles.buttonBlue]}>
+                <Text style={styles.buttonLabel}>Update type of emergency</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.cancel} style={[styles.button, styles.buttonRed]}>
+                <Text style={styles.buttonLabel}>Cancel request</Text>
+              </TouchableOpacity>
+            </View>
+            :
+            <View>
+              <Text>Select type of emergency.</Text>
+              {emergencies}
+              <TouchableOpacity onPress={this.cancel} style={[styles.button, styles.buttonRed]}>
+                <Text style={styles.buttonLabel}>Cancel request</Text>
+              </TouchableOpacity>
+            </View>
+          }
           </View>
           :
           <View>

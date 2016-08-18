@@ -139,7 +139,8 @@ var emergencyNavigator = React.createClass({
 			socket: ws,
 			connected: false,
 			emergency: false,
-			canceled: false
+			canceled: false,
+			typeOfEmergency: ""
 		}   
 	},
 	componentDidMount() {
@@ -183,6 +184,12 @@ var emergencyNavigator = React.createClass({
 				this.setState({
 					emergency: emergency
 				})
+			}
+
+			if(msg.type === 'identifyEmergency'){
+				this.setState({
+					typeOfEmergency: msg.emergency
+				});
 			}
 
 		};
@@ -250,7 +257,7 @@ var emergencyNavigator = React.createClass({
 							<button onClick={(event) => this.resolved(event, true)}>Resolve emergency and stop listening for emergencies</button>
 						</div>
 					}
-					<h1 style={{textAlign: 'center'}}>.emergencyType</h1>
+					<h1 style={{textAlign: 'center'}}>{this.state.typeOfEmergency ? this.state.typeOfEmergency : 'Waiting for user to identify emergency...'}</h1>
 					<h3>Latitude: {this.state.emergency.position.coords.latitude}</h3>
 					<h3>Longitude: {this.state.emergency.position.coords.longitude}</h3>
 					<h3>Altitude: {this.state.emergency.position.coords.altitude}</h3>
@@ -258,6 +265,7 @@ var emergencyNavigator = React.createClass({
 					<h3>Altitude accuracy: {this.state.emergency.position.coords.altitudeAccuracy} meters</h3>
 					<h3>Direction of travel: {this.state.emergency.position.coords.heading} degrees</h3>
 					<h3>Speed of travel: {this.state.emergency.position.coords.speed}</h3>
+					<h3>Phone number: {this.state.emergency.medinfo.phone}</h3>
 					<h1>Medical Information</h1>
 					<h3>Name: {this.state.emergency.medinfo.firstName} {this.state.emergency.medinfo.lastName}</h3>
 					<h3>Weight: {this.state.emergency.medinfo.weight}</h3>
