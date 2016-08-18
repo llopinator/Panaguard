@@ -177,9 +177,9 @@ var emergencyNavigator = React.createClass({
 				})
 			}
 
-			if(msg.type === 'updatePosition'){
+			if(msg.type === 'updatePosition' && this.state.emergency){
 				var emergency = Object.assign({}, this.state.emergency);
-				emergency.position = JSON.parse(msg.position);
+				emergency.position = msg.position;
 				this.setState({
 					emergency: emergency
 				})
@@ -219,6 +219,8 @@ var emergencyNavigator = React.createClass({
 		browserHistory.goBack();
 	},
 	render(){
+
+		console.log("state upon render", this.state);
 		if(this.state.emergency){
 			//console.log('POSITION ', this.state.emergency.position);
 			var conditions = this.state.emergency.medinfo.conditions.map(function(condition, index){
