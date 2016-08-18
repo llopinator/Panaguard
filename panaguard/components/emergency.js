@@ -41,12 +41,15 @@ const WS_STATES = [
 ];
 
 module.exports = React.createClass({
+
   getInitialState(){
     console.log("Creating socket");
     var socket = new WebSocket('ws://localhost:8080/');
     return {
       socket: socket,
-      paired: false
+      paired: false,
+      position: "unknown",
+      maximumAge: 30000
     }
   },
   componentDidMount(){
@@ -87,21 +90,42 @@ module.exports = React.createClass({
 
       if(msg.type === 'ack'){ //emergency request acknowledged
         console.log('Emergency request acknowledged');
-        //retrieve medical information to send dispatcher
-        AsyncStorage.getItem('medical')
-        .then(result => {
-          if(!result){
-            console.log('no medical information to send dispatcher')
-            //only send gps location
-          } else {
-            //console.log('retrieved medical information: ', result);
-            console.log('sending medinfo to dispatcher')
-            this.state.socket.send(JSON.stringify({
-              type: 'emergency',
-              medinfo: result
-            }));
-          }
-        })
+
+        //retrieve current position
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            var pos = JSON.stringify(position);
+              //retrieve medical information to send dispatcher
+              AsyncStorage.getItem('medical')
+              .then(result => {
+                if(!result){
+                  console.log('no medical information to send dispatcher')
+                  //only send gps location
+                } else {
+                  //console.log('retrieved medical information: ', result);
+                  console.log('sending medinfo to dispatcher')
+                  console.log(pos);
+                  this.state.socket.send(JSON.stringify({
+                    type: 'emergency',
+                    medinfo: result,
+                    position: pos
+                  }));
+                }
+              
+            });
+          },
+          (error) => alert(error.message),
+          {enableHighAccuracy: true, timeout: 20000, maximumAge: this.state.maximumAge}
+        );
+
+        //defines what to do when pos changes (resend the position)
+        this.WatchID = navigator.geolocation.watchPosition((position) => {
+         
+          this.state.socket.send(JSON.stringify({
+            type: 'updatePosition',
+            position: position
+          }));
+        });
       }
 
       if(msg.type === 'paired'){ //emergency request acknowledged
@@ -112,10 +136,35 @@ module.exports = React.createClass({
         });
       }
 
+      if(msg.type === 'resolved'){ //dispatcher resolved emergency
+        this.setState({
+          paired: false
+        })
+        this.props.navigator.pop();
+      }
+
     });
   },
-  cancel(){
+  componentWillUnmount: function() {
+    navigator.geolocation.clearWatch(this.watchID);
+  },
+  stopTrying(){
+    this.state.socket.close();
     this.props.navigator.pop();
+    console.log('User canceled request - stopped trying to connect')
+  },
+  cancel(){
+    var sent = false;
+    if(!sent){
+      this.state.socket.send(JSON.stringify({
+        type: 'cancel'
+      }));
+      sent = true;
+    }
+  
+    if(sent){
+       this.props.navigator.pop();
+    }
   },
   render(){
     return(
@@ -130,7 +179,7 @@ module.exports = React.createClass({
           :
           <View>
             <Text>Connecting you with a dispatcher...</Text>
-            <TouchableOpacity onPress={this.cancel} style={[styles.button, styles.buttonRed]}>
+            <TouchableOpacity onPress={this.stopTrying} style={[styles.button, styles.buttonRed]}>
               <Text style={styles.buttonLabel}>Cancel request</Text>
             </TouchableOpacity>
           </View>
