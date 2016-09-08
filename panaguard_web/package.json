@@ -37,5 +37,15 @@
     "eslint-plugin-react": "^5.2.2",
     "nodemon": "^1.9.2",
     "watchify": "^3.7.0"
-  }
+  },
+  "contributors": [
+    {
+      "name": "Cristian Llop",
+      "email": "cllop1@swarthmore.edu"
+    },
+    {
+      "name": "Eric Wang",
+      "email": "ewang1@swarthmore.edu"
+    }
+  ]
 }
