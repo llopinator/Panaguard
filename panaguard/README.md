@@ -1,4 +1,4 @@
-Panaguard's mobile app.
+Panaguard's iOS app.
 
 A unique uuid is issued to first time app users when they open the app. The uuid is encrypted in a javascript web token (JWT), signed with a user specific secret, and stored locally using the iPhone's keychain feature. Medical information/conditions and emergency contacts are stored in local storage.
 
