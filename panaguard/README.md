@@ -1,3 +1,5 @@
-#Mobile app 
+Panaguard's mobile app.
 
-The mobile app that enables users to store medical information/conditions and emergency contacts as well as to report emergencies to 9-1-1.
+A unique uuid is issued to first time app users when they open the app. The uuid is encrypted in a javascript web token (JWT), signed with a user specific secret, and stored locally using the iPhone's keychain feature. Medical information/conditions and emergency contacts are stored in local storage.
+
+When a user presses the emergency button, a WebSocket message is sent to the WebSocket server (WSS) with the JWT containing the user's uuid. If the JWT confirms that the user is in fact a Panaguard user, the user is paired with the next dispatcher currently connected to the WSS (dispatchers are put into a queue upon connecting to the WSS and removed as they get paired with users) and an acknowledgement message is sent back to the user. This in turn prompts the user to send the WSS a message containing their medical information/conditions and their location data, all of which is passed along to the dispatcher they've been paired with. When the user selects the type of their emergency from their known medical conditions, another message is sent that relays this information to the dispatcher.
