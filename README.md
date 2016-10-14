@@ -2,7 +2,7 @@
 
 www.panaguard.org
 
-Panaguard is a proof of concept for a technologically up-to-date emergency response infrastructure, streamlining 9-1-1 to relay more information in less time - no registration or login required. 
+Panaguard is a proof of concept for technologically up-to-date emergency response infrastructure, streamlining  9-1-1 to relay more information in less time - no registration or login required. 
 <div style="text-align:center" align="center">
 	<img src="https://github.com/llopinator/Panaguard/blob/master/Panaguard.gif" 
 		display="block"/>
