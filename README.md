@@ -7,4 +7,7 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
 	<img src="https://github.com/llopinator/Panaguard/blob/master/Panaguard.gif" 
 		display="block"/>
 </div>
-An iOS app enables users to store medical information/conditions and emergency contacts in advance. In the event of an emergency, users press one button, which alerts their emergency contacts and sends their medical information/conditions - along with location data like their latitude & longitude - to a dispatcher. In the current iteration of the app, the user can then select from their known medical conditions to indicate which one is the cause of their current emergency. All of this occurs in realtime over a WebSocket connection between user and dispatcher.
+##How it Works
+
+An iOS app enables users to store medical information/conditions and emergency contacts in advance. In the event of an emergency, users press one button, which alerts their emergency contacts and sends their medical information/conditions - along with location data like their latitude & longitude - to a dispatcher, who receives this data on a web app. In the current iteration of the app, the user can then select from their known medical conditions to indicate which one is the cause of their current emergency. All of this occurs in realtime over a WebSocket connection between user and dispatcher.
+
