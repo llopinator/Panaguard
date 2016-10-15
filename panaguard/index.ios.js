@@ -1,7 +1,7 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
+ Panaguard
+
+ Cristian Llop, August 2016
  */
 
 import React, { PropTypes, Component } from 'react';
@@ -34,7 +34,6 @@ var Contacts = require('./components/contacts');
 var Emergency = require('./components/emergency');
 var DeviceUUID = require('react-native-device-uuid');
 
-// 1
 // This is the root view
 var panaguard = React.createClass({
   render() {

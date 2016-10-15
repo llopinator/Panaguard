@@ -10,17 +10,17 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
 </div>
 
 <a name="table-of-contents"></a>
-##Table of Contents
+#Table of Contents
  
  * [Panaguard](#panaguard)
  * [Table of Contents](#table-of-contents)
  * [How it Works](#how-it-works)
  * [Implementation](#implementation)
  	* [Mobile App (Users)](#mobile-app)
- 	* [Web App (Dispatchers)](#web-app)
+ 	* [Web App (Dispatchers) and Backend](#web-app)
 
 <a name="how-it-works"></a>
-##How it Works
+#How it Works
 
 An iOS app enables users to store medical information/conditions and emergency contacts in advance.
 
@@ -55,16 +55,29 @@ In the event of an emergency, users press one button, which alerts their emergen
 
 
 <a name="implementation"></a>
-##Implementation
+#Implementation
 
 	
 <a name="mobile-app"></a>
-###Mobile App (Users)
+##Mobile App (Users)
 
-####Technologies Used
+###Technologies and Packages Used
 
-* **React Native**
+* React Native (https://facebook.github.io/react-native/)
+* react-native-uuid (https://www.npmjs.com/package/react-native-uuid)
+* react-native-keychain (https://github.com/oblador/react-native-keychain)
 
 <a name="web-app"></a>
-###Web App (Dispatchers)
+##Web App (Dispatchers) and Backend
+
+###Technologies and Packages Used
+
+* React.js (https://facebook.github.io/react/)
+* Node.js (https://nodejs.org/en/)
+* Express.js (http://expressjs.com/)
+* MongoDB (https://mlab.com)
+* Mongoose (http://mongoosejs.com/)
+* jsonwebtoken (https://www.npmjs.com/package/jsonwebtoken)
+* bcrypt (https://www.npmjs.com/package/bcrypt)
+* ws (https://www.npmjs.com/package/ws)
 
