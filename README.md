@@ -15,9 +15,12 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
  * [Panaguard](#panaguard)
  * [Table of Contents](#table-of-contents)
  * [How it Works](#how-it-works)
- * [Implementation](#implementation)
+ * [Technologies and Packages Used](#technologies)
  	* [Mobile App (Users)](#mobile-app)
  	* [Web App (Dispatchers) and Backend](#web-app)
+ * [Implementation](#implementation)
+ 	* [Mobile App (Users)](#mobile-app-implementation)
+ 	* [Web App (Dispatchers) and Backend](#web-app-implementation)
 
 <a name="how-it-works"></a>
 #How it Works
@@ -54,14 +57,12 @@ In the event of an emergency, users press one button, which alerts their emergen
 </div>
 
 
-<a name="implementation"></a>
-#Implementation
+<a name="technologies"></a>
+#Technologies and Packages Used
 
 	
 <a name="mobile-app"></a>
 ##Mobile App (Users)
-
-###Technologies and Packages Used
 
 * React Native (https://facebook.github.io/react-native/)
 * react-native-uuid (https://www.npmjs.com/package/react-native-uuid)
@@ -69,8 +70,6 @@ In the event of an emergency, users press one button, which alerts their emergen
 
 <a name="web-app"></a>
 ##Web App (Dispatchers) and Backend
-
-###Technologies and Packages Used
 
 * React.js (https://facebook.github.io/react/)
 * Node.js (https://nodejs.org/en/)
@@ -80,4 +79,16 @@ In the event of an emergency, users press one button, which alerts their emergen
 * jsonwebtoken (https://www.npmjs.com/package/jsonwebtoken)
 * bcrypt (https://www.npmjs.com/package/bcrypt)
 * ws (https://www.npmjs.com/package/ws)
+
+<a name="implementation"></a>
+#Implementation
+
+<a name="mobile-app-implementation"></a>
+##Mobile App (Users)
+
+
+<a name="web-app-implementation"></a>
+##Web App (Dispatchers) and Backend
+
+
 
