@@ -1,5 +1,5 @@
-<a name="panaguard"></a>
 #Panaguard 
+<a name="panaguard"></a>
 
 www.panaguard.org
 
@@ -15,6 +15,9 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
  * [Panaguard](#panaguard)
  * [Table of Contents](#table-of-contents)
  * [How it Works](#how-it-works)
+ * [Implementation](#implementation)
+ 	*[Mobile App (Users)](#mobile-app)
+ 	*[Web App (Dispatchers)](#web-app)
 
 <a name="how-it-works"></a>
 ##How it Works
@@ -49,4 +52,17 @@ In the event of an emergency, users press one button, which alerts their emergen
 	<img src="https://github.com/llopinator/Panaguard/blob/master/Screenshots/Emergency2.png" 
 		display="block"/>
 </div>
+
+
+<a name="implementation"></a>
+##Implementation
+
+	
+<a name="mobile-app"></a>
+	###Mobile App (Users)
+		####Technologies Used
+			* **React Native**
+
+<a name="web-app"></a>
+	###Web App (Dispatchers)
 

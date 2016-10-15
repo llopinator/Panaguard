@@ -115,7 +115,6 @@ wss.on('connection', function connection(ws) {
               token: msg.token
             }));
           } else {
-            //what if only one dispatcher on queue and assigned before user gets here?
             console.log('user connection authorized');
             ws.authorizedUser = true;
             ws.uuid = decoded; //store user's uuid on the ws connection for identification
