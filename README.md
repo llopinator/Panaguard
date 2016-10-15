@@ -59,12 +59,12 @@ In the event of an emergency, users press one button, which alerts their emergen
 
 	
 <a name="mobile-app"></a>
-	###Mobile App (Users)
+###Mobile App (Users)
 
-		####Technologies Used
-		
-			* **React Native**
+####Technologies Used
+
+* **React Native**
 
 <a name="web-app"></a>
-	###Web App (Dispatchers)
+###Web App (Dispatchers)
 
