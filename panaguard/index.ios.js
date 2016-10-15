@@ -50,24 +50,23 @@ var panaguard = React.createClass({
 });
 
 var Landing = React.createClass({
-  getInitialState(){
-    var token = false;
-    var password = false; 
-    //debugger;
-    Keychain
-      .getGenericPassword()
-      .then((credentials) => {
-        token = credentials.username;
-        password = credentials.password;
-      })
-      .catch((err) => {
-        console.log('Could not load credentials. ' + err);
-      });
-      console.log('t: ', token, ' pwd: ', password);
-    return {
-      loggedIn: token && password
-    }
-  },
+  // getInitialState(){
+  //   var token = false;
+  //   var password = false; 
+  //   Keychain
+  //     .getGenericPassword()
+  //     .then((credentials) => {
+  //       token = credentials.username;
+  //       password = credentials.password;
+  //     })
+  //     .catch((err) => {
+  //       console.log('Could not load credentials. ' + err);
+  //     });
+  //     console.log('t: ', token, ' pwd: ', password);
+  //   return {
+  //     loggedIn: token && password
+  //   }
+  // },
   componentDidMount(){
     AsyncStorage.getItem('user')
     .then(result => {
@@ -102,42 +101,48 @@ var Landing = React.createClass({
       }
     });
   },
-  press() {
-    this.props.navigator.push({
-      component: Login,
-      title: "Login",
-      passProps: {
-        onLogin: () => 
-          this.setState({
-            loggedIn: true
-          })
-      }
-    })
-  },
-  register() {
-    this.props.navigator.push({
-      component: Register,
-      title: "Register",
-      passProps: {
-        onLogin: () => 
-          this.setState({
-            loggedIn: true
-          })
-      }
-    });
-  },
+  // press() {
+  //   this.props.navigator.push({
+  //     component: Login,
+  //     title: "Login",
+  //     passProps: {
+  //       onLogin: () => 
+  //         this.setState({
+  //           loggedIn: true
+  //         })
+  //     }
+  //   })
+  // },
+  // register() {
+  //   this.props.navigator.push({
+  //     component: Register,
+  //     title: "Register",
+  //     passProps: {
+  //       onLogin: () => 
+  //         this.setState({
+  //           loggedIn: true
+  //         })
+  //     }
+  //   });
+  // },
+
+  //medical info/conditions component
   medical(){
     this.props.navigator.push({
       component: Medical,
       title: "Medical Information"
     });
   },
+
+  //emergency contacts component
   contacts(){
     this.props.navigator.push({
       component: Contacts,
       title: "Emergency Contacts"
     })
   },
+
+  //emergency component
   emergency(){
     this.props.navigator.push({
       component: Emergency,

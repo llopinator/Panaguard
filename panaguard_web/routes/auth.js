@@ -5,6 +5,7 @@ var express = require('express'),
     bcrypt  = require('bcrypt'),
     router  = express.Router();
 
+//issues a new app user a unique, jwt encrypted uuid
 router.post('/newuser', function(req, res, next){
   var uuid = req.body.uuid;
   res.json({
@@ -12,8 +13,10 @@ router.post('/newuser', function(req, res, next){
   })
 });
 
+//registers new dispatcher accounts
 router.post('/register', function(req, res, next) {
 
+  //either username or password not entered
   if(!req.body.username || ! req.body.password){
     res.status(400).json({
       success: false,
@@ -21,6 +24,7 @@ router.post('/register', function(req, res, next) {
     })
   }
 
+  //check that a user with that username hasn't already registered
   User.findOne({
     username: req.body.username
   }, function(err, user){
@@ -35,9 +39,10 @@ router.post('/register', function(req, res, next) {
           var params = _.pick(req.body, ['username', 'password']);
           console.log(params);
 
+          //hash the dispatcher's password
           bcrypt.genSalt(10, function(err, salt) {
             bcrypt.hash(params.password, salt, function(err, hash) {
-              // Store hash in your password DB.
+              // Add the hash and username to dispatcher's User object, store in DB
               console.log(err);
               params.password = hash;
               var c = new User({
@@ -62,6 +67,7 @@ router.post('/register', function(req, res, next) {
   });
 });
 
+//authenticates dispatcher attempting to log in
 router.post('/authenticate', function(req, res) {
   // find the user
   User.findOne({

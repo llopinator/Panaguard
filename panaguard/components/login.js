@@ -1,3 +1,5 @@
+//PHASED OUT - users no longer have to log in
+
 import React, { PropTypes, Component } from 'react';
 import ReactNative from 'react-native';
 import {

@@ -23,6 +23,8 @@ const UIManager = require('NativeModules').UIManager;
 var styles = require('../styles/style');
 
 module.exports = React.createClass({
+
+  //attempts to retrieve existing medical information/conditions
   componentDidMount() {
     AsyncStorage.getItem('medical')
     .then(result => {
@@ -30,10 +32,13 @@ module.exports = React.createClass({
         var medical = JSON.parse(result);
         console.log('medical :', medical);
         medical.date = new Date(medical.date);
-        medical.timeZoneOffsetInHours = this.props.timeZoneOffsetInHours;
+        medical.timeZoneOffsetInHours = this.props.timeZoneOffsetInHours; /*
+        this is done because JSON parsing the result object doesn't JSON parse
+        the properties of the object that are themselves JSON objects (in this case,
+        the timeZoneOffsetInHours property)*/
         this.setState(medical);
       } else {
-        console.log('Medical information not saved on disk');
+        console.log('Medical information not saved');
       }
     })
     .catch(error => {
@@ -77,20 +82,25 @@ module.exports = React.createClass({
       addingCond: false
     }
   },
+  //handles the date of birth modal
   onDateChange(date) {
     this.setState({date: date, saved: false});
   },
+  //handles the date of birth modal
   setModalVisible(modal, visible) {
     var newState = {};
     newState[modal] = visible;
     console.log(newState);
     this.setState(newState);
   },
+  //add a medical condition
   addCond() {
     this.setState({
       addingCond: !this.state.addingCond
     })
   },
+
+  //save the medical condition that was added
   saveCond(){
     var condition = {
       name: this.state.condName.slice(),
@@ -107,7 +117,7 @@ module.exports = React.createClass({
       addingCond: false,
     })
   },
-
+  //updates existing medical condition
   updateCond(index, field, val) {
     console.log("event", val);
     var conditions = [].concat(this.state.conditions);
@@ -117,6 +127,8 @@ module.exports = React.createClass({
       saved: false
     })
   },
+
+  //save updated information so that it persists
   save(){
     var state = this.state;
     state.saved = true;
@@ -125,6 +137,8 @@ module.exports = React.createClass({
       this.setState({saved: true})
     });
   },
+
+  //delete medical condition
   deleteCondition(index){
     var conditions = this.state.conditions;
     conditions.splice(index, 1);

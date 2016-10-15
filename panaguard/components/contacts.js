@@ -18,12 +18,13 @@ import {
 } from 'react-native';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-var Keychain = require('react-native-keychain');
+// var Keychain = require('react-native-keychain');
 const UIManager = require('NativeModules').UIManager;
 var styles = require('../styles/style');
 
 module.exports = React.createClass({
   
+  //attempts to retrieve existing emergency contacts
   componentDidMount() {
       AsyncStorage.getItem('contacts')
       .then(result => {
@@ -31,7 +32,7 @@ module.exports = React.createClass({
           var contacts = JSON.parse(result);
           this.setState(contacts);
         } else {
-          console.log('Contacts not saved on disk');
+          console.log('Contacts not saved');
         }
       })
       .catch(error => {
@@ -50,11 +51,17 @@ module.exports = React.createClass({
       saved: true
     }
   },
+
+  /*alters state to indicate that user is adding a contact, which will prompt
+  the add contact box to expand*/
   addContact() {
     this.setState({
       addingContact: !this.state.addingContact
     })
   },
+
+  /*saves the new contact whose information the user has filled out
+  in the add contact box*/
   saveContact(){
     var contact = {
       name: this.state.contactName.slice(),
@@ -67,19 +74,26 @@ module.exports = React.createClass({
       condPhone: "",
       condemail: "",
       addingContact: false,
-      saved: false
+      saved: false          /*indicates that user must save in order for changes
+      to persist*/
     })
   },
+
+  //update an existing contact
   updateContact(index, field, val) {
     console.log("event", val);
     var contacts = [].concat(this.state.contacts);
     contacts[index][field] = val;
     this.setState({
       contacts: contacts,
-      saved: false
+      saved: false    /*indicates that user must save in order for changes
+      to persist*/
     })
     console.log(this.state.contacts);
   },
+
+  /*if the user makes changes - adding or updating contacts - they must
+  press the save button, otherwise the changes won't persist*/
   save(){
     var state = this.state;
     state.saved = true;
@@ -88,12 +102,14 @@ module.exports = React.createClass({
       this.setState({saved: true})
     });
   },
+  //delete a contact
   deleteContact(index){
     var contacts = this.state.contacts;
     contacts.splice(index, 1);
     this.setState({
       contacts: contacts,
-      saved: false
+      saved: false    /*indicates that user must save in order for changes
+      to persist*/
     })
   },
   render() {

@@ -66,7 +66,6 @@ In the event of an emergency, users press one button, which alerts their emergen
 
 * React Native (https://facebook.github.io/react-native/)
 * react-native-uuid (https://www.npmjs.com/package/react-native-uuid)
-* react-native-keychain (https://github.com/oblador/react-native-keychain)
 
 <a name="web-app"></a>
 ##Web App (Dispatchers) and Backend
@@ -86,7 +85,7 @@ In the event of an emergency, users press one button, which alerts their emergen
 <a name="mobile-app-implementation"></a>
 ##Mobile App (Users)
 
-Users aren't required to register, log in, perform sms verification, or otherwise do anything besides entering the app to access its full functionality. Instead, a unique user id (uuid) is issued to first time app users when they open the app. The uuid is encrypted in a jsonwebtoken (JWT), signed with a user specific secret, and stored locally using the iPhone's keychain feature. Medical information/conditions and emergency contacts are stored locally in async storage.
+Users aren't required to register, log in, perform sms verification, or otherwise do anything besides entering the app to access its full functionality. Instead, a unique user id (uuid) is issued to first time app users when they open the app. The uuid is encrypted in a jsonwebtoken (JWT), signed with a user specific secret, and stored locally in async storage. Medical information/conditions and emergency contacts are also stored in async storage.
  
 When a user presses the emergency button, a WebSocket message is sent to the WebSocket server (WSS) with the JWT containing the user's uuid. If the JWT is successfully unencrypted, the user is authenticated and paired with the next dispatcher currently connected to the WSS (dispatchers are put into a queue upon connecting to the WSS and removed as they get paired with users) and an acknowledgement message is sent back to the user. User and dispatcher are paired by storing the object representing each party's WebSocket connection as a property on the other's connection object.
 

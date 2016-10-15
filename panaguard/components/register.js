@@ -1,3 +1,6 @@
+//PHASED OUT - users no longer have to register
+
+
 import React, { PropTypes, Component } from 'react';
 import ReactNative from 'react-native';
 import {

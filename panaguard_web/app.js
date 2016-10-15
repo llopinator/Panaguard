@@ -70,7 +70,7 @@ app.use(function(req, res, next) {
 
 var url = require('url')
   , WebSocketServer = WebSocket.Server
-  , wss = new WebSocketServer({ port: 8080 })
+  , wss = new WebSocketServer({ port: 8080 }) //creates new WebSocket server
 
 wss.dispatchers = []; //queue of dispatchers awaiting emergency requests
 
@@ -78,10 +78,10 @@ wss.on('connection', function connection(ws) {
   
   var location = url.parse(ws.upgradeReq.url, true);
   
- 
+  //governs how to handle the different messages received by the WSS
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
-    var msg = JSON.parse(message);
+    var msg = JSON.parse(message); //parses any msg before evaluating it
 
     if(msg.type === "auth") { //user or dispatcher auth
 
@@ -101,14 +101,15 @@ wss.on('connection', function connection(ws) {
             }));
           }
         });
-      } else { //not dispatcher (presumably user)
+      } else { //not dispatcher (presumably user) -> verify w/ user secret
         jwt.verify(msg.token, process.env.USER_SECRET, function(err, decoded) { 
           console.log('verifying user connection');     
           if (err) {
             return ws.close(1003, 'error: ' + err)    
           } else if(wss.dispatchers.length === 0) {
             //CHECK IF DISPATCHERS ARRAY EMPTY
-            //if dispatchers.length === 0, emit event says "try again" (tell them to send another ack)
+            /*if dispatchers.length === 0, emit event says "try again" (tell 
+            the user to send another ack until a dispatcher joins the queue)*/
             console.log('no dispatchers in queue - telling user to try again');
             ws.send(JSON.stringify({
               type: 'tryAgain',
@@ -116,10 +117,11 @@ wss.on('connection', function connection(ws) {
             }));
           } else {
             console.log('user connection authorized');
-            ws.authorizedUser = true;
+            ws.authorizedUser = true; //mark user's ws connection as authorized
             ws.uuid = decoded; //store user's uuid on the ws connection for identification
-            wss.nextDispatcher(ws);
-            ws.send(JSON.stringify({
+            wss.nextDispatcher(ws); //pair user with next dispatcher
+            ws.send(JSON.stringify({ /*acknowledge user, telling them to send over their
+              medical information/conditions and location data*/
               type: 'ack'
             }));
           }
@@ -127,10 +129,12 @@ wss.on('connection', function connection(ws) {
       }
     }
 
+    //how a user responds after being acknowledged
     if(msg.type === "emergency" && ws.authorizedUser && ws.currDispatcher){ //user's emergency request
       console.log('dispatcher received medical information!')
       //console.log(ws.uuid);
-      var emergencyObject = { //asynchronously store emergency in DB
+      /*asynchronously store emergency in DB (don't want this holding everyone up)*/
+      var emergencyObject = { 
         dispatcher: ws.currDispatcher.dispatcherToken._id,
         user: ws.uuid.device,
         medinfo: msg.medinfo,
@@ -141,7 +145,7 @@ wss.on('connection', function connection(ws) {
         canceled: null
       };
       console.log(msg.position);
-      var emergency = new Emergency(emergencyObject)
+      var emergency = new Emergency(emergencyObject)  
       .save(function(error, emergency){
           if(error){
             console.log('error saving emergency to db: ', error)
@@ -149,17 +153,20 @@ wss.on('connection', function connection(ws) {
             console.log('successfully saved emergency to db');
           }
       });
-      ws.currDispatcher.currEmergency = emergencyObject; //store medinfo on dispatcher ws connection
+      //store emergency info on dispatcher's ws connection
+      ws.currDispatcher.currEmergency = emergencyObject; 
+      //let each party know they've been paired
       ws.send(JSON.stringify({
         type: 'paired'
       }));
-      ws.currDispatcher.send(JSON.stringify({
+      ws.currDispatcher.send(JSON.stringify({ //send dispatcher the emergency information
         type: 'paired',
         emergency: emergencyObject
       }));
     }
 
-    if(msg.type === "resolved" && ws.authorizedUser && ws.currUser){ //emergency resolved by dispatcher
+    //emergency resolved by dispatcher
+    if(msg.type === "resolved" && ws.authorizedUser && ws.currUser){ 
       ws.currEmergency = false; //clear curr emergency
       ws.currUser.send(JSON.stringify({ //tell user emergency resolved
         type: 'resolved'
@@ -182,7 +189,8 @@ wss.on('connection', function connection(ws) {
       //console.log(wss);
     }
     
-    if(msg.type === "cancel" && ws.authorizedUser && ws.currDispatcher){ //user canceling their emergency
+    //user canceled their emergency
+    if(msg.type === "cancel" && ws.authorizedUser && ws.currDispatcher){ 
       console.log('canceling!!!!!');
       ws.currDispatcher.send(JSON.stringify({
         type: 'canceled'
@@ -200,14 +208,16 @@ wss.on('connection', function connection(ws) {
       ws.close(1000, 'Emergency canceled'); //close user's connection
     }
 
-    if(msg.type === 'canceled' && ws.authorizedUser && ws.currUser){ //dispatcher canceled on
+    //dispatcher was canceled on
+    if(msg.type === 'canceled' && ws.authorizedUser && ws.currUser){ 
       ws.currEmergency = false; //clear curr emergency
       ws.currUser = false; //clear user
       wss.dispatchers.push(ws); //put dispatcher at end of queue
       console.log('emergency canceled - dispatcher back in queue');
     }
 
-    if(msg.type === 'endConnection' && ws.authorizedUser){ //dispatcher ending shift
+    //dispatcher ending shift while on queue (must be removed from queue)
+    if(msg.type === 'endConnection' && ws.authorizedUser){ 
       
       //race condition
       var index = wss.dispatchers.indexOf(ws); //remove dispatcher from queue
@@ -220,6 +230,7 @@ wss.on('connection', function connection(ws) {
       ws.close(1000, 'Dispatcher ended connection');
     }
 
+    //user has moved far enough away from initial location to warrant updating their location
     if(msg.type === 'updatePosition' && ws.authorizedUser && ws.currDispatcher){
       //send dispatcher updated position
       ws.currDispatcher.send(JSON.stringify({
@@ -228,6 +239,7 @@ wss.on('connection', function connection(ws) {
       }));
     }
 
+    //user has identified type of emergency
     if(msg.type === 'identifyEmergency' && ws.authorizedUser && ws.currDispatcher){
       //update type of emergency
       ws.currDispatcher.send(JSON.stringify({

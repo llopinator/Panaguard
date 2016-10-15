@@ -58,11 +58,12 @@ module.exports = React.createClass({
 
     AsyncStorage.getItem('user')
     .then(result => {
-      if(!result){
-        console.log('ur not a user fuck off');
+      if(!result){ /*person doesn't have a uuid in asyncstorage, 
+        so they're definitely not a user*/
+        console.log('ur not a user get lost');
       } else {
-       // console.log('socket!!!!!!!!: ', this.state.socket.send, ' result: ', result);
-        
+        /*when the user first opens a connection to the WebSocket server,
+        send a message of type 'auth' with their jwt for authentication*/   
         this.state.socket.addEventListener('open', () => {
           this.state.socket.send(JSON.stringify({
             type: 'auth',
@@ -104,7 +105,6 @@ module.exports = React.createClass({
                   console.log('no medical information to send dispatcher')
                   //only send gps location
                 } else {
-                  //console.log('retrieved medical information: ', result);
                   console.log('sending medinfo to dispatcher')
                   console.log(pos);
                   this.state.socket.send(JSON.stringify({
@@ -126,7 +126,7 @@ module.exports = React.createClass({
           {enableHighAccuracy: true, timeout: 20000, maximumAge: this.state.maximumAge}
         );
 
-        //defines what to do when pos changes (resend the position)
+        //defines what to do when position changes (resend the position)
         this.WatchID = navigator.geolocation.watchPosition((position) => {
          
           this.state.socket.send(JSON.stringify({
@@ -136,6 +136,7 @@ module.exports = React.createClass({
         });
       }
 
+      //paired with dispatcher
       if(msg.type === 'paired'){ //emergency request acknowledged
         console.log('Paired with a dispatcher');
         //retrieve medical information to send dispatcher
@@ -144,6 +145,7 @@ module.exports = React.createClass({
         });
       }
 
+      //emergency resolved -> return user to main view
       if(msg.type === 'resolved'){ //dispatcher resolved emergency
         this.setState({
           paired: false
@@ -156,6 +158,8 @@ module.exports = React.createClass({
   componentWillUnmount(){
     navigator.geolocation.clearWatch(this.watchID);
   },
+
+  //identifies type of emergency
   identifyEmergency(event, emergency){
     this.state.socket.send(JSON.stringify({
       type: 'identifyEmergency',
@@ -171,6 +175,8 @@ module.exports = React.createClass({
     this.props.navigator.pop();
     console.log('User canceled request - stopped trying to connect')
   },
+
+  //cancels emergency request
   cancel(){
     var sent = false;
     if(!sent){
