@@ -16,8 +16,8 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
  * [Table of Contents](#table-of-contents)
  * [How it Works](#how-it-works)
  * [Implementation](#implementation)
- 	*[Mobile App (Users)](#mobile-app)
- 	*[Web App (Dispatchers)](#web-app)
+ 	* [Mobile App (Users)](#mobile-app)
+ 	* [Web App (Dispatchers)](#web-app)
 
 <a name="how-it-works"></a>
 ##How it Works
@@ -60,7 +60,9 @@ In the event of an emergency, users press one button, which alerts their emergen
 	
 <a name="mobile-app"></a>
 	###Mobile App (Users)
+
 		####Technologies Used
+		
 			* **React Native**
 
 <a name="web-app"></a>
