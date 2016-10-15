@@ -46,7 +46,7 @@ An iOS app enables users to store medical information/conditions and emergency c
 		height="394"/>
 </div>
 
-In the event of an emergency, users press one button, which alerts their emergency contacts and sends their medical information/conditions - along with location data like their latitude & longitude - to a dispatcher, who receives this data on a web app. In the current iteration of the app, the user can then select from their known medical conditions to indicate which one is the cause of their current emergency. All of this occurs in realtime over a WebSocket connection between user and dispatcher.
+In the event of an emergency, users press one button, which alerts their emergency contacts and sends their medical information/conditions - along with location data like their latitude & longitude - to a dispatcher, who receives this data on a web app and can begin dispatching the appropriate help. In the current iteration of the app, the user can then select from their known medical conditions to indicate which one is the cause of their current emergency. All of this occurs in realtime over a WebSocket connection between user and dispatcher.
 
 
 <div style="text-align:center" align="center">
@@ -86,20 +86,20 @@ In the event of an emergency, users press one button, which alerts their emergen
 <a name="mobile-app-implementation"></a>
 ##Mobile App (Users)
 
-Users aren't required to register, log in, perform sms verification, or otherwise do anything besides entering the app in order to access its full functionality. Instead, a unique user id (uuid) is issued to first time app users when they open the app. The uuid is encrypted in a jsonwebtoken (JWT), signed with a user specific secret, and stored locally using the iPhone's keychain feature. Medical information/conditions and emergency contacts are stored locally in async storage.
+Users aren't required to register, log in, perform sms verification, or otherwise do anything besides entering the app to access its full functionality. Instead, a unique user id (uuid) is issued to first time app users when they open the app. The uuid is encrypted in a jsonwebtoken (JWT), signed with a user specific secret, and stored locally using the iPhone's keychain feature. Medical information/conditions and emergency contacts are stored locally in async storage.
  
 When a user presses the emergency button, a WebSocket message is sent to the WebSocket server (WSS) with the JWT containing the user's uuid. If the JWT is successfully unencrypted, the user is authenticated and paired with the next dispatcher currently connected to the WSS (dispatchers are put into a queue upon connecting to the WSS and removed as they get paired with users) and an acknowledgement message is sent back to the user. User and dispatcher are paired by storing the object representing each party's WebSocket connection as a property on the other's connection object.
 
-The acknowledgment message sent to the user upon being paired with a dispatcher in turn prompts the user to send the WSS back a message containing the user's medical information/conditions and location data, all of which is passed along to the dispatcher they've been paired with. Before the dispatcher receives this information, it's stored in a timestamped Emergency object and saved in the database. When the emergency is canceled or resolved, the Emergency object in the database is with the emergency's end time.
+The acknowledgment message sent to the user upon being paired with a dispatcher in turn prompts the user to send the WSS back a message containing the user's medical information/conditions and location data, all of which is passed along to the dispatcher they've been paired with. Before the dispatcher receives this information, it's stored in a timestamped Emergency object and saved in the database. When the emergency is canceled or resolved, the Emergency object in the database is updated with the emergency's end time.
 
 When the user selects the type of their emergency from their known medical conditions, another message is sent that relays this information to the dispatcher. If a user cancels their emergency, their connection to the WSS is eliminated. However, the user's information (including a callback number) remains on the dispatcher's screen to allow follow up contact with the user if deemed necessary. If it's not, the dispatcher can either choose to reenter the queue for emergency requests or stop listening for emergencies.
 
 <a name="web-app-implementation"></a>
 ##Web App (Dispatchers)
 
-Unlike app users, dispatchers must register accounts. When a registered dispatcher logs in to the web app, they're issued a JWT signed with a dispatcher specific secret that encrypts their same User object that's stored in the databse. From here they can begin "listening for emergencies", which attempts to connect them to the WSS by sending a WebSocket message with their JWT and, upon successful authentication, adds them to a queue of dispatchers waiting to be paired with incoming emergencies.
+Unlike app users, dispatchers must register accounts. When a registered dispatcher logs in to the web app, they're issued a JWT signed with a dispatcher specific secret that encrypts their User object (retrieved from the database) and stores the JWT in local storage. From here they can begin "listening for emergencies", which attempts to connect them to the WSS by sending a WebSocket message with their JWT and, upon successful authentication, adds them to a queue of dispatchers waiting to be paired with incoming emergencies.
 
-When a dispatcher resolves an emergency, they can choose to either be added to the end of the  queue of dispatchers or to stop listening for emergencies. 
+When a dispatcher resolves an emergency, they can choose to either be added to the end of the queue of dispatchers or to stop listening for emergencies. 
 
 
 
