@@ -14,19 +14,19 @@ An iOS app enables users to store medical information/conditions and emergency c
 <div style="text-align:center" align="center">
 	<img src="https://github.com/llopinator/Panaguard/blob/master/Screenshots/Panaguard%20Landing.png" 
 		display="inline-block"
-		width="221"
+		width="218"
 		height="394"/>
 	<img src="https://github.com/llopinator/Panaguard/blob/master/Screenshots/Panaguard%20MedInfo1.png" 
 		display="inline-block"
-		width="221"
+		width="218"
 		height="394"/>
 	<img src="https://github.com/llopinator/Panaguard/blob/master/Screenshots/Panaguard%20MedInfo2.png" 
 		display="inline-block"
-		width="221"
+		width="218"
 		height="394"/>
 	<img src="https://github.com/llopinator/Panaguard/blob/master/Screenshots/Panaguard%20EmergencyContacts.png" 
 		display="inline-block"
-		width="221"
+		width="218"
 		height="394"/>
 </div>
 
