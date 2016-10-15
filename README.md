@@ -1,4 +1,5 @@
-#Panaguard
+Panaguard
+=========
 
 www.panaguard.org
 
@@ -7,7 +8,19 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
 	<img src="https://github.com/llopinator/Panaguard/blob/master/Screenshots/Panaguard.gif" 
 		display="block"/>
 </div>
-##How it Works
+
+#Table of Contents
+
+	* [Panaguard](#panaguard)
+	* [Table of Contents](#table-of-contents)
+	* [How it Works](#how-it-works)
+	* [Technologies Used](#technologies-used)
+	* [Implementation](#implementation)
+		* [Mobile App (Users)](#mobile-app)
+		* [Web App (Dispatchers)](#web-app)
+
+
+#How it Works
 
 An iOS app enables users to store medical information/conditions and emergency contacts in advance.
 
