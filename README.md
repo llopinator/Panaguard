@@ -1,3 +1,4 @@
+<a name="panaguard"></a>
 #Panaguard 
 
 www.panaguard.org
@@ -8,10 +9,14 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
 		display="block"/>
 </div>
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<a name="table-of-contents"></a>
+##Table of Contents
+ 
+ * [Panaguard](#panaguard)
+ * [Table of Contents](#table-of-contents)
+ * [How it Works](#how-it-works)
 
-
+<a name="how-it-works"></a>
 ##How it Works
 
 An iOS app enables users to store medical information/conditions and emergency contacts in advance.
