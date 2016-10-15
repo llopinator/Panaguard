@@ -20,7 +20,7 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
  	* [Web App (Dispatchers) and Backend](#web-app)
  * [Implementation](#implementation)
  	* [Mobile App (Users)](#mobile-app-implementation)
- 	* [Web App (Dispatchers) and Backend](#web-app-implementation)
+ 	* [Web App (Dispatchers)](#web-app-implementation)
 
 <a name="how-it-works"></a>
 #How it Works
@@ -95,7 +95,7 @@ The acknowledgment message sent to the user upon being paired with a dispatcher 
 When the user selects the type of their emergency from their known medical conditions, another message is sent that relays this information to the dispatcher. If a user cancels their emergency, their connection to the WSS is eliminated. However, the user's information (including a callback number) remains on the dispatcher's screen to allow follow up contact with the user if deemed necessary. If it's not, the dispatcher can either choose to reenter the queue for emergency requests or stop listening for emergencies.
 
 <a name="web-app-implementation"></a>
-##Web App (Dispatchers) and Backend
+##Web App (Dispatchers)
 
 Unlike app users, dispatchers must register accounts. When a registered dispatcher logs in to the web app, they're issued a JWT signed with a dispatcher specific secret that encrypts their same User object that's stored in the databse. From here they can begin "listening for emergencies", which attempts to connect them to the WSS by sending a WebSocket message with their JWT and, upon successful authentication, adds them to a queue of dispatchers waiting to be paired with incoming emergencies.
 
