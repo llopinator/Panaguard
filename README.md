@@ -109,11 +109,11 @@ When a dispatcher resolves an emergency, they can choose to either be added to t
 		display="inline-block"
 		width="290"
 		height="301.7"/>
-	<img src="https://github.com/llopinator/Panaguard/blob/master/mockups/Panaguard%20mock2.png" 
+	<img src="https://github.com/llopinator/Panaguard/blob/master/mockups/Panaguard%20mock1.png" 
 		display="inline-block"
 		width="290"
 		height="301.7"/>
-	<img src="https://github.com/llopinator/Panaguard/blob/master/mockups/Panaguard%20mock1.png" 
+	<img src="https://github.com/llopinator/Panaguard/blob/master/mockups/Panaguard%20mock2.png" 
 		display="inline-block"
 		width="290"
 		height="301.7"/>
