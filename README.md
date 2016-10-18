@@ -119,6 +119,14 @@ When a dispatcher resolves an emergency, they can choose to either be added to t
 		height="301.7"/>
 </div>
 
+These mockups represent the final design iteration - of which there were many - that I settled on. 
+
+A test call button has been added to the main view (left mockup) so that users can practice using the app before emegency strikes. 
+
+A transition (middle mockup) has also been added between requesting emergency help and being paired with a dispatcher, allowing users to correct their GPS location if it's incorrect or cancel the call if they wish. Although not pictured in the mockup, there'd also be a "can't speak" button on this view.
+
+Finally, the view presented to users once they've been paired with a dispatcher (right mockup) has been completely revamped. The buttons on the top enable users to, in order: text the dispatcher, adjust their location, mute/unmute the dispatcher, and turn speaker on/off. The 'select emergency button' takes users to an interface from which they can select either a known medical condition or an unrelated event as the cause of their emergency. Finally, there's a box of real time updates tracking important developments, such as when the user is successfully paired with a dispatcher or when they've successfully communicated something about their emergency. Like the previous view, this view would also ideally have a "can't speak" button.
+
 
 
 
