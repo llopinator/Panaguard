@@ -21,6 +21,7 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
  * [Implementation](#implementation)
  	* [Mobile App (Users)](#mobile-app-implementation)
  	* [Web App (Dispatchers)](#web-app-implementation)
+ * [Future User Experience Flow](#ux-flow)
 
 <a name="how-it-works"></a>
 #How it Works
@@ -100,7 +101,23 @@ Unlike app users, dispatchers must register accounts. When a registered dispatch
 
 When a dispatcher resolves an emergency, they can choose to either be added to the end of the queue of dispatchers or to stop listening for emergencies. 
 
+<a name="ux-flow"></a>
+#Future User Experience Flow
 
+<div style="text-align:center" align="center">
+	<img src="https://github.com/llopinator/Panaguard/blob/master/mockups/Panaguard%20mock1.png" 
+		display="inline-block"
+		width="290"
+		height="524"/>
+	<img src="https://github.com/llopinator/Panaguard/blob/master/mockups/Panaguard%20mock2.png" 
+		display="inline-block"
+		width="290"
+		height="524"/>
+	<img src="https://github.com/llopinator/Panaguard/blob/master/mockups/Panaguard%20mock3.png" 
+		display="inline-block"
+		width="290"
+		height="524"/>
 
+</div>
 
 
