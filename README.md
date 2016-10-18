@@ -46,7 +46,7 @@ An iOS app enables users to store medical information/conditions and emergency c
 		height="394"/>
 </div>
 
-In the event of an emergency, users press one button, which alerts their emergency contacts and sends their medical information/conditions - along with location data like their latitude & longitude - to a dispatcher, who receives this data on a web app and can begin dispatching the appropriate help. In the current iteration of the app, the user can then select from their known medical conditions to indicate which one is the cause of their current emergency. All of this occurs in realtime over a WebSocket connection between user and dispatcher.
+In the event of an emergency, users press one button, which alerts their emergency contacts and sends their medical information/conditions - along with location data like their latitude & longitude - to a dispatcher, who receives this data on a web app and can begin dispatching the appropriate help. In the current iteration of the app, the user can then select from their known medical conditions to indicate which one is the cause of their current emergency. All of this occurs in real time over a WebSocket connection between user and dispatcher.
 
 
 <div style="text-align:center" align="center">
@@ -70,9 +70,9 @@ In the event of an emergency, users press one button, which alerts their emergen
 <a name="web-app"></a>
 ##Web App (Dispatchers) and Backend
 
-* React.js (https://facebook.github.io/react/)
+* React (https://facebook.github.io/react/)
 * Node.js (https://nodejs.org/en/)
-* Express.js (http://expressjs.com/)
+* Express (http://expressjs.com/)
 * MongoDB (https://mlab.com)
 * Mongoose (http://mongoosejs.com/)
 * jsonwebtoken (https://www.npmjs.com/package/jsonwebtoken)
