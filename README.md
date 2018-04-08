@@ -24,7 +24,7 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
  * [Future User Experience Flow](#ux-flow)
 
 <a name="how-it-works"></a>
-#How it Works
+# How it Works
 
 An iOS app enables users to store medical information/conditions and emergency contacts in advance.
 
@@ -59,17 +59,17 @@ In the event of an emergency, users press one button, which alerts their emergen
 
 
 <a name="technologies"></a>
-#Technologies and Packages Used
+# Technologies and Packages Used
 
 	
 <a name="mobile-app"></a>
-##Mobile App (Users)
+## Mobile App (Users)
 
 * React Native (https://facebook.github.io/react-native/)
 * react-native-uuid (https://www.npmjs.com/package/react-native-uuid)
 
 <a name="web-app"></a>
-##Web App (Dispatchers) and Backend
+## Web App (Dispatchers) and Backend
 
 * React (https://facebook.github.io/react/)
 * Node.js (https://nodejs.org/en/)
@@ -81,10 +81,10 @@ In the event of an emergency, users press one button, which alerts their emergen
 * ws (https://www.npmjs.com/package/ws)
 
 <a name="implementation"></a>
-#Implementation
+# Implementation
 
 <a name="mobile-app-implementation"></a>
-##Mobile App (Users)
+## Mobile App (Users)
 
 Users aren't required to register, log in, perform sms verification, or otherwise do anything besides entering the app to access its full functionality. Instead, a unique user id (uuid) is issued to first time app users when they open the app. The uuid is encrypted in a jsonwebtoken (JWT), signed with a user specific secret, and stored locally in async storage. Medical information/conditions and emergency contacts are also stored in async storage.
  
@@ -95,14 +95,14 @@ The acknowledgment message sent to the user upon being paired with a dispatcher 
 When the user selects the type of their emergency from their known medical conditions, another message is sent that relays this information to the dispatcher. If a user cancels their emergency, their connection to the WSS is eliminated. However, the user's information (including a callback number) remains on the dispatcher's screen to allow follow up contact with the user if deemed necessary. If it's not, the dispatcher can either choose to reenter the queue for emergency requests or stop listening for emergencies.
 
 <a name="web-app-implementation"></a>
-##Web App (Dispatchers)
+## Web App (Dispatchers)
 
 Unlike app users, dispatchers must register accounts. When a registered dispatcher logs in to the web app, they're issued a JWT signed with a dispatcher specific secret that encrypts their User object (retrieved from the database) and stores the JWT in local storage. From here they can begin "listening for emergencies", which attempts to connect them to the WSS by sending a WebSocket message with their JWT and, upon successful authentication, adds them to a queue of dispatchers waiting to be paired with incoming emergencies.
 
 When a dispatcher resolves an emergency, they can choose to either be added to the end of the queue of dispatchers or to stop listening for emergencies. 
 
 <a name="ux-flow"></a>
-#Future User Experience Flow
+# Future User Experience Flow
 
 <div style="text-align:center" align="center">
 	<img src="https://github.com/llopinator/Panaguard/blob/master/mockups/Panaguard%20mock3.png" 
