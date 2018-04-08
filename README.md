@@ -10,7 +10,7 @@ Panaguard is a proof of concept for technologically up-to-date emergency respons
 </div>
 
 <a name="table-of-contents"></a>
-#Table of Contents
+# Table of Contents 
  
  * [Panaguard](#panaguard)
  * [Table of Contents](#table-of-contents)
